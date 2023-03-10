@@ -7,9 +7,22 @@ buildscript {
   }
 }
 
-plugins {
-  // https://github.com/sherter/google-java-format-gradle-plugin
-  // id "com.github.sherter.google-java-format" version "0.9"
+gradleEnterprise {
+    buildScan {
+      String date = new Date().format('MM-dd-YYYY-HH:mm:ss')
+      String commitId = 'git rev-parse --verify HEAD'.execute().text.trim()
+      String projectURL = 'git config --get remote.origin.url'.execute().text.trim()
+      String commitURL = "${projectURL}".minus(".git") + "/commit/" + "${commitId}"
+      String commitMessage = 'git log -1 --pretty=%B'.execute().text.trim()
+      tag "${date}"
+      tag "${position}"
+      tag "${authorName}"
+      tag "${commitId}"
+      link "LinkedIn", "${linkedInURL}"
+      link "GitHub Commit URL", "${commitURL}"
+      value "GitHub Project URL", "${projectURL}"
+      value "Commit message", "${commitMessage}"
+    }
 }
 
 apply plugin: 'java'
